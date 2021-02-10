@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Collect time</title>
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        var userNumber;
+        if (getCookie("userNumber"))
+            userNumber = getCookie("userNumber");
+        else
+            userNumber = setCookie("userNumber", getRndInteger(999, 9999999999999), 30); //set "user_email" cookie, expires in 30 days
+        $(function () {
+            var start = null;
+            $(window).load(function (event) {
+                start = userNumber;
+                $.post('insert.php', {userNumber: userNumber, END: 'now'});
+                sendRequest(userNumber);
+            });
+            $(window).unload(function (event) {
+                // var time = event.timeStamp - start;
+                $.post('insert.php', {userNumber: userNumber, END: 'now'}).success(function (res) {
+                    console.log(res);
+                });
+                // sendRequest(userNumber, true);
+            })
+        });
+        function sendRequest(userNumber, end = false){
+
+            console.log(userNumber);
+            request = $.ajax({
+                url: "insert.php",
+                type: "post",
+                data: {
+                    userNumber: userNumber,
+                    end: end
+                }
+            });
+            request.done(function (response, textStatus, jqXHR){
+                // Log a message to the console
+                console.log("Hooray, it worked!"+ response);
+            });
+
+                    }
+        console.log(userNumber);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

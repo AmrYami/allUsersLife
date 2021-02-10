@@ -1,0 +1,12 @@
+{
+    "name": "amryami/test",
+    "description": "test",
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Includes\\": "Includes",
+            "Classes\\": "Classes"
+        }
+    }
+}
