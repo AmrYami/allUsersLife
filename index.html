@@ -8,6 +8,11 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript">
 
+        var userNumber;
+        if (getCookie("userNumber"))
+            userNumber = getCookie("userNumber");
+        else
+            userNumber = setCookie("userNumber", getRndInteger(99, 999999999), 30);
 
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,44 +39,32 @@
             return null;
         }
 
-        var userNumber;
-        if (getCookie("userNumber"))
-            userNumber = getCookie("userNumber");
-        else
-            userNumber = setCookie("userNumber", getRndInteger(999, 9999999999999), 30); //set "user_email" cookie, expires in 30 days
         $(function () {
-            var start = null;
             $(window).load(function (event) {
-                start = userNumber;
-                $.post('insert.php', {userNumber: userNumber, END: 'now'});
-                sendRequest(userNumber);
+                sendRequest(userNumber, false, "insert.php");
             });
             $(window).unload(function (event) {
-                // var time = event.timeStamp - start;
-                $.post('insert.php', {userNumber: userNumber, END: 'now'}).success(function (res) {
-                    console.log(res);
-                });
-                // sendRequest(userNumber, true);
+                sendRequest(userNumber, true, "delete.php");
             })
         });
-        function sendRequest(userNumber, end = false){
 
-            console.log(userNumber);
+        function sendRequest(userNumber, end = false, route = "insert.php") {
+
+            console.log(end);
             request = $.ajax({
-                url: "insert.php",
+                url: route,
                 type: "post",
                 data: {
                     userNumber: userNumber,
                     end: end
                 }
             });
-            request.done(function (response, textStatus, jqXHR){
+            request.done(function (response, textStatus, jqXHR) {
                 // Log a message to the console
-                console.log("Hooray, it worked!"+ response);
+                // console.log(response);
             });
+        }
 
-                    }
-        console.log(userNumber);
     </script>
 </head>
 <body>

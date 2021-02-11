@@ -9,7 +9,7 @@ class All
     public function AllData()
     {
         $con = new connector();
-        $sql = "SELECT `id`,`start_session` , `end_session` FROM `users` WHERE end_session > NOW() - INTERVAL 10 MINUTE";
+        $sql = "SELECT `id`,`start_session` , `end_session` FROM `life_users` WHERE end_session > NOW() - INTERVAL 10 MINUTE";
         $data = $con->select($sql);
 
         $totalTime = 0;
